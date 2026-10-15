@@ -1,0 +1,34 @@
+# Render.com blueprint — deploy the DEMON SMP panel as a persistent Node web
+# service. Render (unlike Netlify) runs a long-lived process, so the console,
+# process control and file manager all keep working.
+#
+#   1. Push this repo to GitHub.
+#   2. Render → New → Blueprint → pick the repo.
+#   3. Add DATABASE_URL from a Render/Netlify/Neon Postgres instance (optional).
+services:
+  - type: web
+    name: demon-smp-panel
+    runtime: node
+    plan: starter
+    buildCommand: npm ci --omit=dev || npm install --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: panel-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_DIR
+        value: /var/data
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      # Uncomment and set from your Postgres provider to enable the DB backend:
+      # - key: DATABASE_URL
+      #   sync: false

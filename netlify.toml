@@ -1,0 +1,50 @@
+# ============================================================================
+# DEMON SMP — Netlify configuration (STATIC FRONTEND ONLY)
+# ----------------------------------------------------------------------------
+# ⚠️  READ ME: Netlify cannot host this panel's backend.
+#
+# The panel is a stateful Node service. It:
+#   • spawns and supervises your game server process (child_process)
+#   • reads/writes files on the host machine (file manager / editor)
+#   • keeps a persistent WebSocket console relay
+#   • writes a local JWT secret and console log
+#
+# Netlify runs static assets + short-lived serverless functions: none of the
+# above exists there. So Netlify can host the *UI* only, and the UI must talk to
+# a Node host that runs `server.js` (Docker / Render / Railway / Fly / a VPS),
+# reachable over HTTP(S).
+#
+# ── To use this frontend on Netlify ─────────────────────────────────────────
+#  1. Deploy the backend somewhere that runs Node (see render.yaml / Dockerfile)
+#     and give it a public https URL, e.g. https://panel.example.com
+#  2. Set that URL in public/config.js:
+#         window.DEMON_PANEL = { apiBase: 'https://panel.example.com' };
+#  3. On the backend, allow this Netlify origin so CORS + WebSocket pass:
+#         ALLOWED_ORIGINS=https://your-site.netlify.app
+#
+# ── Alternatively (no config.js edit): proxy API + WebSocket through Netlify ─
+#  Netlify redirects can proxy plain HTTP, but WebSockets are NOT proxied, so
+#  the live console will fail. The config.js approach is the supported one.
+#
+# ── Netlify DB ───────────────────────────────────────────────────────────────
+#  Netlify DB is Neon Postgres. Its DATABASE_URL belongs on the *backend* host
+#  (Netlify → your site → Integrations, or Neon dashboard), NOT in this file.
+#  The backend picks it up automatically (see db.js) and stores users/settings/
+#  audit in Postgres instead of JSON files.
+# ============================================================================
+
+[build]
+  publish = "public"
+  command = "echo 'DEMON SMP frontend: static, nothing to build.'"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Sensible security headers for the static shell. The backend sets its own
+# (stricter, CSP-bearing) headers when it serves these same files.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "no-referrer"

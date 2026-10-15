@@ -1,0 +1,12 @@
+node_modules/
+.env
+data/
+npm-debug.log*
+*.log
+.DS_Store
+
+# Plaintext credential files — never commit these
+ACCOUNTS.txt
+LOGINS.txt
+*credentials*.txt
+

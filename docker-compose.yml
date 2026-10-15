@@ -1,0 +1,58 @@
+# ============================================================================
+# DEMON SMP — one-command local / self-hosted stack
+#
+#   docker compose up --build
+#
+# Then open http://localhost:8080. The first run prints the bootstrap admin
+# credentials to the container logs (`docker compose logs -f panel`).
+#
+# The bundled Postgres service is OPTIONAL. Leave DATABASE_URL unset to store
+# state in the mounted ./data JSON files (default), or set it (see `.env`) to
+# let the panel store users/settings/audit in Postgres instead. The two work
+# interchangeably — the JSON files remain a local cache either way.
+# ============================================================================
+services:
+  panel:
+    build: .
+    container_name: demon-smp-panel
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      HOST: 0.0.0.0
+      PORT: "8080"
+      DATA_DIR: /data
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-in-production}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # Uncomment to use the bundled Postgres service:
+      # DATABASE_URL: postgres://panel:panel@db:5432/panel
+      # ALLOWED_ORIGINS: ""
+    volumes:
+      - ./data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+
+  # Optional Postgres. Not required unless you set DATABASE_URL above.
+  db:
+    image: postgres:16-alpine
+    container_name: demon-smp-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: panel
+      POSTGRES_PASSWORD: panel
+      POSTGRES_DB: panel
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U panel -d panel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

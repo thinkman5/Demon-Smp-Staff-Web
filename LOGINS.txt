@@ -1,0 +1,14 @@
+# DEMON SMP - control panel logins
+# Format: username:password
+# Roles: owner=admin, admin=admin, moderator=admin, builder=admin, eventhost=viewer, viewer=viewer
+# Generated: 2026-10-05T15:38:24.015Z
+# NOTE: the "admin" account is the LIVE panel administrator (already exists;
+#       do not create it again in User Management).
+
+owner:owner123456
+admin:Demon123456
+moderator:)_v@_@FwwKmV=kCp)$2^
+builder:*ei)w)w$sq)n$%Hd5K
+eventhost:^TV$jZQ8cd94KP?r
+viewer:6(f(66rhvNeK4B
+#by red root

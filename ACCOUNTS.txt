@@ -1,0 +1,31 @@
+==========================================================================
+  DEMON SMP — Control Panel accounts
+  Generated: 2026-10-05T15:25:49.503Z
+==========================================================================
+
+  Username        Password                          Length  Role
+  ----------------------------------------------------------------------
+  owner           owner123456                      11     admin
+  admin           Demon123456                      11     admin
+  moderator       )_v@_@FwwKmV=kCp)$2^             20     admin
+  builder         *ei)w)w$sq)n$%Hd5K               18     admin
+  eventhost       ^TV$jZQ8cd94KP?r                 16     viewer
+  viewer          6(f(66rhvNeK4B                   14     viewer
+
+==========================================================================
+  HOW TO USE
+  ----------------------------------------------------------------------
+  1. Sign in to the panel as an administrator.
+  2. Open "User Management" and create each login above with:
+       Username = the name shown,  Password = the password shown,
+       Role     = the Role column (admin = full control, viewer = read only).
+  3. Delete this file once the accounts exist, or store it in a password
+     manager. It contains PLAINTEXT credentials.
+
+  SECURITY
+  ----------------------------------------------------------------------
+  - Do NOT commit this file to git (it is listed in .gitignore).
+  - Passwords meet the panel policy: >=10 chars, letters + digits.
+  - Change or delete any account you do not need.
+  - Prefer a password manager over a text file for anything important.
+==========================================================================
